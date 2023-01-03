@@ -16,7 +16,7 @@ function ListPersons() {
 	const [person, setPerson] = useState({});
 	const [deletePersonDialog, setDeletePersonDialog] = useState(false);
 
-	const urlBase = 'http://localhost:8000/api/persons/';
+	const urlBase = 'http://localhost:7000/api/persons/';
 	const navigate = useNavigate();
 
 	const peticionGet = () => {
