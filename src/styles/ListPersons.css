@@ -1,0 +1,14 @@
+.container-list-person{  
+  width: 80%;
+}
+
+#title-person {
+  display: flex;
+  justify-content: center;   
+  margin: 15px;
+  font-size: 40px !important;  
+}
+
+.button-action{
+  margin-right: 2% !important;
+}
