@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { getPersonById, createPerson, updatePerson }  from '../services/PersonsApi.js';
+
+//Estilos 
+import '../styles/FormPerson.css'
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 
 
-//Estilos 
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import '../styles/FormPerson.css'
-
-
-function FormPerson() {
+function FormPerson({titleButton, titleForm}) {
   const toast = useRef(null);
-  const navigate = useNavigate();
-  const urlBase = 'http://localhost:7000/api/persons/';
+  const navigate = useNavigate();  
   const params = useParams();
   const [person, setPerson] = useState({
     id: 0,
@@ -28,8 +26,7 @@ function FormPerson() {
     setPerson({ ...person, [e.target.name]: e.target.value });
   }
 
-  const validData = (data) => {
-    console.log(data);
+  const validData = (data) => {    
     if (data.names === '' || data.document === '') {
       return true;
     }
@@ -48,58 +45,41 @@ function FormPerson() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const data = JSON.stringify(person);
-
+    
     const valid = validData(person)
 
     if (valid) {
       showError()
       return;
     }
-
-    if (params.id) {
-      axios({
-        method: "put",
-        url: urlBase + params.id,
-        headers: {
-          "content-type": "application/Json",
-        },
-        data: data,
-      });
+    else if (params.id) {      
+      navigate('/');
+      updatePerson(params.id, person);      
     }
     else {
-      axios({
-        method: "post",
-        url: urlBase,
-        headers: {
-          "content-type": "application/Json",
-        },
-        data: data,
+      createPerson(person).then(() => {
+        navigate('/');        
       });
     }
-
-    navigate('/')
   }
 
-  const peticionGet = async () => {
-
-    const { data } = await axios.get(urlBase + params.id)
-    setPerson(
-      {
-        id: data.ID,
-        names: data.Names,
-        surnames: data.Surnames,
-        document: data.Document,
-        telephone: data.Telephone
-      }
-    )
+  const getDataById = async () => {
+    if (params.id) { 
+      getPersonById(params.id)
+        .then( data => {
+          setPerson({
+            id: data.ID,
+            names: data.Names,
+            surnames: data.Surnames,
+            document: data.Document,
+            telephone: data.Telephone
+          })
+        });	    
+    }
   }
 
   useEffect(() => {
-    if (params.id) {
-      peticionGet()
-    }
+    getDataById()
   }, [])
 
 
@@ -107,7 +87,7 @@ function FormPerson() {
     <div className='container-form' onSubmit={handleSubmit}>
       <Toast ref={toast} />
       <form action="">
-        <h3 id='title-person'>Formulario</h3>
+        <h3 id='title-person'>{titleForm}</h3>
         <div className='fied'>
           <InputText name="names" placeholder="Nombre" onChange={handleChance} value={person.names} />
         </div>
@@ -120,7 +100,7 @@ function FormPerson() {
         <div className='fied'>
           <InputText type='number' name="telephone" placeholder="Teléfono" onChange={handleChance} value={person.telephone} />
         </div>
-        <Button label="Guardar" />
+        <Button label={titleButton} />
         <Link to="/">
           <Button label="Cancelar" className="p-button-danger" to={'/'} />
         </Link>

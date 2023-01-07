@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { getAllPersons, deletePerson }  from '../services/PersonsApi.js';
 
 //Estilos
 import '../styles/ListPersons.css'
@@ -15,13 +15,11 @@ function ListPersons() {
 	const [persons, setPersons] = useState([]);
 	const [person, setPerson] = useState({});
 	const [deletePersonDialog, setDeletePersonDialog] = useState(false);
-
-	const urlBase = 'http://localhost:7000/api/persons/';
 	const navigate = useNavigate();
 
-	const peticionGet = () => {
-		axios.get(urlBase).then((res) => { setPersons(res.data) });
-	};
+	const getData = async () => {
+		await getAllPersons().then( data => {setPersons(data)});	
+	}
 
 	const confirmDeleteSelected = (data) => {
 		setDeletePersonDialog(true);
@@ -29,17 +27,11 @@ function ListPersons() {
 	};
 
 	const deleteSelectedPerson = () => {
-		axios({
-			method: "delete",
-			url: urlBase + person.ID,
-			headers: {
-				"content-type": "application/Json",
-			},
-			data: person,
+		deletePerson(person.ID, person)
+		.then( () => {
+			getData();		
+			setDeletePersonDialog(false);
 		});
-
-		window.location.reload();
-		setDeletePersonDialog(false);
 	};
 
 	const updatePerson = (e) => {
@@ -77,7 +69,7 @@ function ListPersons() {
 	};
 
 	useEffect(() => {
-		peticionGet();
+		getData();
 	}, []);
 
 	return (

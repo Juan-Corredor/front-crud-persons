@@ -15,8 +15,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<ListPersons />} />
-          <Route path="/create-person" element={<FormPerson />} />
-          <Route path="/edit-person/:id" element={<FormPerson />} />
+          <Route path="/create-person" element={<FormPerson titleButton='Guardar' titleForm='Registrar' />} />
+          <Route path="/edit-person/:id" element={<FormPerson titleButton='Actualizar' titleForm='Actualizar' />} />
         </Routes>
       </BrowserRouter>
     </div>
