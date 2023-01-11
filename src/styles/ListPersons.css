@@ -9,6 +9,6 @@
   font-size: 40px !important;  
 }
 
-.button-action{
+.button-list-persons .p-button, .p-button-table {
   margin-right: 2% !important;
 }

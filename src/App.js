@@ -1,8 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ListPersons from './components/ListPersons';
-import FormPerson from './components/FormPerson';
-
 //Styles
 import "primereact/resources/themes/bootstrap4-dark-blue/theme.css";  //theme
 import "primereact/resources/primereact.min.css";                  //core css
@@ -14,9 +12,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<ListPersons />} />
-          <Route path="/create-person" element={<FormPerson titleButton='Guardar' titleForm='Registrar' />} />
-          <Route path="/edit-person/:id" element={<FormPerson titleButton='Actualizar' titleForm='Actualizar' />} />
+          <Route path="/" element={<ListPersons />} />          
         </Routes>
       </BrowserRouter>
     </div>
